@@ -21,7 +21,7 @@ Db_connection();
 
 const User = require("./models/User");
 
-app. post('/api/register', async (req, res) =>{
+app.post('/api/register', async (req, res) =>{
     try {
         //get data
         const { username, email, password , role} = req.body;
@@ -49,11 +49,27 @@ const hashPassword = await bcrypt.hash(password, 10)
 }  
 )
 
+app.post('/api/login', async (req, res) =>{
+    try {
+        //get data
+        const { email, password } = req.body;
+        if(!email || !password) return res.status(400).json({msg:"missing data"});
+        // validate data
+        const user = await User.findOne({email});
+        if(!user) return res.status(400).json({msg:"invalid email or password"});
 
+        const userExist = await bcrypt.compare(password, user.password);
+        
+        if(!userExist) return res.status(400).json({msg:"invalid email or password"});
+        // if all went well ,, then login
+        const authcode= Buffer.from(user._id.toString()).toString('base64');
 
-
-
-
+        res.status(200).json({msg:"login successful", authcode})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({msg:"server error"})
+    }
+})
 
 
 
