@@ -37,10 +37,10 @@ app.use('/api',userRoutes)
 
 const Product = require("./models/Product");
 
-const produtRouter = require("./Routes/productRoutes");
+const productRouter = require("./Routes/productRoutes");
 
 
-app.use('/api/',produtRouter)
+app.use('/api/',productRouter)
 
 
 
